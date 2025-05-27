@@ -1,0 +1,53 @@
+@use "@/shared/styles/mixins" as *;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  overscroll-behavior: contain;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  text-size-adjust: none;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  @include fluid-text(16, 14);
+  line-height: var(--base-line-height);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  scrollbar-gutter: stable;
+
+  &::-webkit-scrollbar {
+    background-color: var(--scrollbar-color);
+    width: 10px;
+    border-radius: var(--main-border-radius);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    border-radius: var(--main-border-radius);
+  }
+
+  &.lock-scroll {
+    overflow: hidden;
+  }
+}
+
+svg {
+  fill: currentColor;
+}
