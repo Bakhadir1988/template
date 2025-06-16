@@ -1,14 +1,14 @@
+import { Input } from "@/shared/ui";
+
 export default function Home() {
   return (
     <div className="container">
       <h1>Главная страница</h1>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus,
-        optio incidunt. Dolorem, voluptas, officiis rerum ducimus consequuntur
-        dicta nobis corrupti non natus nemo molestias quidem exercitationem
-        obcaecati commodi, maxime esse.
-      </p>
-      <small>1231312</small>
+
+      <Input placeholder="Инпут" />
+      <Input label="label" placeholder="Инпут" />
+      <Input error="Ошибка" label="label" placeholder="Инпут" />
+      <Input fullWidth placeholder="Инпут" />
     </div>
   );
 }

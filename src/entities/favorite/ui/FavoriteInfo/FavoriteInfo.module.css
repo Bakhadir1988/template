@@ -1,0 +1,23 @@
+.favoriteInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background-color: #f5f5f5;
+  transition: background-color 0.2s ease;
+}
+
+.favoriteInfo:hover {
+  background-color: #e8e8e8;
+}
+
+.icon {
+  font-size: 20px;
+}
+
+.quantity {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}

@@ -10,6 +10,16 @@ const nextConfig: NextConfig = {
       @use "@/shared/styles/utils" as *;
     `,
   },
+
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "dev.nmcms.ru",
+        pathname: "/resources/catalog/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

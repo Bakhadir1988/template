@@ -1,4 +1,5 @@
 :root {
+  --spacing: 10px;
   --sm-offset: 20px;
   --base-offset: calc(var(--sm-offset) * 2);
   --clamp-offset: clamp(var(--sm-offset), 3vw, 60px);

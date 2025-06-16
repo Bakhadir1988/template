@@ -3,28 +3,50 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "convert:fonts": "node scripts/convert-fonts.js"
+    "convert:fonts": "node scripts/convert-fonts.js",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.8.2",
+    "@tanstack/react-query": "^5.79.2",
+    "axios": "^1.9.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.513.0",
     "next": "15.3.2",
+    "next-redux-wrapper": "^8.1.0",
     "normalize.css": "^8.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "sass": "^1.89.0"
+    "react-redux": "^9.2.0",
+    "sass": "^1.89.0",
+    "swiper": "^11.2.8"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^4.0.0",
     "@eslint/eslintrc": "^3",
+    "@storybook/addon-a11y": "^9.0.5",
+    "@storybook/addon-docs": "^9.0.5",
+    "@storybook/addon-onboarding": "^9.0.5",
+    "@storybook/addon-vitest": "^9.0.5",
+    "@storybook/nextjs-vite": "^9.0.5",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitest/browser": "^3.2.2",
+    "@vitest/coverage-v8": "^3.2.2",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
+    "eslint-plugin-storybook": "^9.0.5",
+    "playwright": "^1.52.0",
+    "storybook": "^9.0.5",
     "ttf2woff": "^3.0.0",
     "ttf2woff2": "^7.0.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.2"
   }
 }
