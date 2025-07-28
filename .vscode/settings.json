@@ -1,3 +1,100 @@
 {
-  "cSpell.words": ["Инпут", "autodocs"]
+  "workbench.colorTheme": "One Dark Pro",
+  "workbench.iconTheme": "catppuccin-latte",
+  "editor.minimap.enabled": false,
+  "editor.tabSize": 2,
+  "workbench.startupEditor": "none",
+  "editor.formatOnSave": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[php]": {
+    "editor.defaultFormatter": "bmewburn.vscode-intelephense-client",
+    "editor.formatOnSave": false
+  },
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features",
+    "editor.formatOnSave": false
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "files.eol": "\n",
+  "editor.unicodeHighlight.nonBasicASCII": false,
+  "workbench.editor.showTabs": "single",
+  "cSpell.language": "en,ru",
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "cSpell.userWords": [
+    "Битрикс",
+    "кластеризаторе",
+    "Лайтшоп",
+    "CAPATH",
+    "checkmark",
+    "clsx",
+    "fancybox",
+    "gotovoe",
+    "Headling",
+    "imask",
+    "keymap",
+    "layot",
+    "magazin",
+    "Mantine",
+    "mapleader",
+    "maplocalleader",
+    "NEWMARK",
+    "nmcms",
+    "nogroup",
+    "noremap",
+    "nvim",
+    "otvety",
+    "placemark",
+    "reshenie",
+    "sert",
+    "strapi",
+    "Swiper",
+    "trivago",
+    "turbopack",
+    "voprosy",
+    "ymaps"
+  ],
+  "diffEditor.hideUnchangedRegions.enabled": true,
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  },
+  "explorer.compactFolders": false,
+  "debug.console.fontSize": 12,
+  "scm.inputFontSize": 12,
+  "window.autoDetectColorScheme": true,
+  "workbench.preferredDarkColorTheme": "One Dark Pro Darker",
+  "workbench.preferredLightColorTheme": "One Dark Pro Mix",
+  "editor.wordWrap": "on",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "git.autofetch": true,
+  "terminal.integrated.fontSize": 14,
+  "liveServer.settings.donotShowInfoMsg": true,
+  "editor.fontFamily": "Hack Nerd Font",
+  "http.proxyAuthorization": null,
+  "window.confirmSaveUntitledWorkspace": false,
+  "terminal.integrated.defaultProfile.linux": "zsh",
+  "terminal.integrated.fontFamily": "monospace",
+  "github.copilot.advanced": {
+    "authProvider": "github"
+  },
+  "editor.fontSize": 15,
+  "extensions.experimental.affinity": {
+    "asvetliakov.vscode-neovim": 1
+  },
+  "chat.agent.enabled": true,
+  "workbench.editorAssociations": {
+    "*.copilotmd": "vscode.markdown.preview.editor",
+    "*.svg": "default"
+  }
 }

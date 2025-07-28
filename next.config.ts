@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "dev.nmcms.ru",
+        hostname: "litra.workup.spb.ru",
         pathname: "/resources/catalog/**",
       },
     ],
