@@ -207,6 +207,8 @@ export const FilterWidget: React.FC<FilterWidgetProps> = ({
     }
   };
 
+  console.log("groups", groups);
+
   return (
     <form
       style={{

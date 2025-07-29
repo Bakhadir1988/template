@@ -96,5 +96,6 @@
   "workbench.editorAssociations": {
     "*.copilotmd": "vscode.markdown.preview.editor",
     "*.svg": "default"
-  }
+  },
+  "cSpell.words": ["valuefield"]
 }

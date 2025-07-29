@@ -8,18 +8,18 @@ export async function getFilter(sect_id: string) {
 }
 
 // Применение фильтра: отправка выбранных значений
-export async function applyFilter(
-  sect_id: string,
-  filterValues: Record<string, any>
-) {
-  const params = new URLSearchParams({
-    comp: "filter",
-    sect_id,
-    ...filterValues,
-  });
-  const res = await fetch(
-    `https://litra-adm.workup.spb.ru/api/?${params.toString()}`
-  );
-  if (!res.ok) throw new Error("Ошибка применения фильтра");
-  return res.json();
-}
+// export async function applyFilter(
+//   sect_id: string,
+//   filterValues: Record<string, any>
+// ) {
+//   const params = new URLSearchParams({
+//     comp: "filter",
+//     sect_id,
+//     ...filterValues,
+//   });
+//   const res = await fetch(
+//     `https://litra-adm.workup.spb.ru/api/?${params.toString()}`
+//   );
+//   if (!res.ok) throw new Error("Ошибка применения фильтра");
+//   return res.json();
+// }
