@@ -36,8 +36,7 @@ export const ProductFilter: React.FC<FilterProps> = ({ sectId }) => {
       });
   }, [sectId]);
 
-  // Фильтруем объекты по типу __nogroup и chars и записываем все в
-  // И в useEffect сохраняй массив, а не объект
+  // Фильтруем объекты по типу __nogroup и chars и записываем все в values
   useEffect(() => {
     if (!filters) return;
     const catalogType: FilterType | undefined = filters?.props[1];
