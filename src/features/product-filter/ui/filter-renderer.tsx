@@ -39,13 +39,18 @@ export const FilterRenderer: React.FC<FilterRendererProps> = ({
 
           console.log("propDisabledOptions", propDisabledOptions);
 
+          // Формируем optionLabels только для активных элементов
+          const optionLabels = options.map((o) =>
+            o.enabled ? `${o.label} (${o.count})` : undefined
+          );
+
           return (
             <FilterItem
               key={prop.prop_id}
               type="checkbox"
               label={prop.title}
               options={options.map((o) => o.value)}
-              optionLabels={options.map((o) => `${o.label} (${o.count})`)}
+              optionLabels={optionLabels}
               disabledOptions={propDisabledOptions}
               value={
                 Array.isArray(values[prop.prop_id])

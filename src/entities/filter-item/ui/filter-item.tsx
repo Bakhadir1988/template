@@ -7,7 +7,7 @@ interface FilterItemProps {
   value?: unknown;
   onChange?: (value: unknown) => void;
   options?: string[];
-  optionLabels?: string[];
+  optionLabels?: (string | undefined)[];
   disabledOptions?: number[];
   min?: number;
   max?: number;
@@ -32,6 +32,8 @@ export const FilterItem = ({
     onChange?.(newValue);
   };
 
+  console.log("optionLabels", optionLabels);
+
   return (
     <div className={styles.root}>
       <h4>{label}</h4>
@@ -40,7 +42,10 @@ export const FilterItem = ({
         <div className="checkbox-group">
           {options.map((option, index) => {
             const isDisabled =
-              disabledOptions && disabledOptions.includes(index);
+              (disabledOptions && disabledOptions.includes(index)) ||
+              (optionLabels && optionLabels[index] === undefined);
+
+            console.log("optionLabels", optionLabels);
 
             return (
               <label
@@ -64,7 +69,8 @@ export const FilterItem = ({
                     cursor: isDisabled ? "not-allowed" : "pointer",
                   }}
                 />
-                {optionLabels && optionLabels[index]
+
+                {optionLabels && optionLabels[index] !== undefined
                   ? optionLabels[index]
                   : option}
               </label>

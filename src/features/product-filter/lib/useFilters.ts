@@ -96,11 +96,20 @@ export function useFilters(sectId: string): UseFiltersReturn {
 
   const fetchFilters = useCallback(
     async (filterValues: FilterValues = {}, showLoading = false) => {
+      console.log("fetchFilters called:", { filterValues, showLoading });
+
       if (showLoading) {
         setLoading(true);
       }
       try {
+        console.log("Making API request...");
+        const startTime = Date.now();
+
         const data = await getFilter(sectId, filterValues);
+
+        const endTime = Date.now();
+        console.log(`API request completed in ${endTime - startTime}ms`);
+
         const filterData = data.filters || data;
         setFilters(filterData);
         setSummary(data.summary || null);
@@ -112,7 +121,8 @@ export function useFilters(sectId: string): UseFiltersReturn {
         }
 
         setLoading(false);
-      } catch {
+      } catch (error) {
+        console.error("fetchFilters error:", error);
         setError("Ошибка загрузки фильтров");
         setLoading(false);
       }

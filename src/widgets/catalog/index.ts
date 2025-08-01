@@ -1,1 +1,3 @@
-export * from "./ui/catalog-list-widget";
+export { CatalogListWidget } from "./ui/catalog-list-widget";
+export { Pagination } from "./ui/pagination";
+export { usePagination } from "./lib/usePagination";

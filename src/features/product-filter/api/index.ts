@@ -5,6 +5,8 @@ export async function getFilter(
   sect_id: string,
   filterValues?: Record<string, unknown>
 ) {
+  console.log("getFilter called:", { sect_id, filterValues });
+
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   if (!apiUrl) {
@@ -15,15 +17,22 @@ export async function getFilter(
   formData.append("comp", "filter");
   formData.append("sect_id", sect_id);
 
-  // Добавляем текущие значения фильтра, если они есть
   if (filterValues) {
     appendFilterValuesToFormData(formData, filterValues);
   }
+
+  const startTime = Date.now();
 
   const res = await fetch(`${apiUrl}`, {
     method: "POST",
     body: formData,
   });
+
+  const endTime = Date.now();
+  console.log(
+    `Fetch request completed in ${endTime - startTime}ms, status:`,
+    res.status
+  );
 
   if (!res.ok) throw new Error("Ошибка загрузки фильтров");
   return res.json();
