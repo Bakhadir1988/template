@@ -15,13 +15,20 @@ type FilterValues = Record<string, unknown>;
 
 type ProductFilterProps = {
   sectId: string;
+  onFilterApplied?: (filteredData: unknown) => void;
 };
 
-export const ProductFilter: React.FC<ProductFilterProps> = ({ sectId }) => {
+export const ProductFilter: React.FC<ProductFilterProps> = ({
+  sectId,
+  onFilterApplied,
+}) => {
   const [filters, setFilters] = useState<FilterResponse | null>(null);
   const [values, setValues] = useState<FilterValues>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [appliedFilters, setAppliedFilters] = useState<FilterResponse | null>(
+    null
+  );
 
   useEffect(() => {
     setLoading(true);
@@ -131,7 +138,9 @@ export const ProductFilter: React.FC<ProductFilterProps> = ({ sectId }) => {
     return result;
   }
 
-  const catalogType: FilterType | undefined = filters.props.find(
+  // Используем актуальные фильтры, если они есть, иначе исходные
+  const currentFilters = appliedFilters || filters;
+  const catalogType: FilterType | undefined = currentFilters?.props.find(
     (t) => t.type_name !== "Корневой тип"
   );
   if (!catalogType) return null;
@@ -209,6 +218,16 @@ export const ProductFilter: React.FC<ProductFilterProps> = ({ sectId }) => {
 
               const result = await applyFilter(sectId, payload);
               console.log("Filter applied successfully:", result);
+
+              // Сохраняем актуальные фильтры с количеством товаров
+              if (result && typeof result === "object" && "filters" in result) {
+                setAppliedFilters(result.filters as FilterResponse);
+              }
+
+              // Вызываем колбэк для обновления списка товаров
+              if (onFilterApplied) {
+                onFilterApplied(result);
+              }
             } catch (error) {
               console.error("Error applying filter:", error);
               // Здесь можно показать ошибку пользователю

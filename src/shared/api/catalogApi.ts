@@ -51,7 +51,17 @@ export async function fetchCatalog(): Promise<CatalogSectionDto> {
     throw new Error("API URL not configured");
   }
 
-  const response = await fetch(`${apiUrl}catalog/`);
+  console.log("Fetching catalog from:", `${apiUrl}catalog/`);
+  const response = await fetch(`https://litra-adm.workup.spb.ru/api/catalog/`, {
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+      Accept: "application/json",
+      "Cache-Control": "no-cache",
+    },
+  });
   if (!response.ok) throw new Error("Ошибка получения данных");
-  return response.json();
+  const data = await response.json();
+  console.log("Catalog response items count:", data.items?.length || 0);
+  return data;
 }

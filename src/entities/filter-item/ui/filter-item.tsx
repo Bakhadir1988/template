@@ -7,6 +7,7 @@ interface FilterItemProps {
   value?: unknown;
   onChange?: (value: unknown) => void;
   options?: string[];
+  disabledOptions?: number[];
   min?: number;
   max?: number;
 }
