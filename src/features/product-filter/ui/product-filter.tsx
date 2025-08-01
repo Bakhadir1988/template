@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { getFilter } from "../api";
+import { getFilter, applyFilter } from "../api";
 import {
   FilterGroup,
   FilterProp,
@@ -107,72 +107,28 @@ export const ProductFilter: React.FC<ProductFilterProps> = ({ sectId }) => {
     const result: Record<string, unknown> = {};
 
     for (const group of groups) {
-      const groupKey = group.tpl_key;
       const propsArr = Object.values(group.props || {});
-      const groupObj: Record<string, unknown> = {};
-
       for (const prop of propsArr) {
+        if (prop.filter_enabled !== "1") continue;
         if (prop.type === "ENUM" && prop.filter) {
           const val = values[prop.prop_id];
           if (val !== undefined && Array.isArray(val) && val.length > 0) {
-            groupObj[prop.prop_id] = val;
+            result[prop.prop_id] = val;
           }
         }
         if (prop.type === "PRICE" && prop.filter) {
           const lt = values[`${prop.prop_id}_lt`];
           const gt = values[`${prop.prop_id}_gt`];
           if (lt !== undefined || gt !== undefined) {
-            groupObj[prop.prop_id] = {
+            result[prop.prop_id] = {
               lt: lt !== undefined ? lt : "",
               gt: gt !== undefined ? gt : "",
             };
           }
         }
       }
-
-      if (Object.keys(groupObj).length > 0) {
-        result[groupKey] = groupObj;
-      }
     }
-
     return result;
-  }
-
-  // Функция для преобразования JSON payload в FormData
-  function buildFormData(
-    payload: Record<string, unknown>,
-    sectId: string
-  ): FormData {
-    const formData = new FormData();
-
-    // Добавляем обязательные поля
-    formData.append("comp", "filter");
-    formData.append("template", "filter");
-    formData.append("sect_id", sectId);
-
-    // Убираем уровни __nogroup и chars, все фильтры на верхнем уровне
-    Object.entries(payload).forEach(([, groupObj]) => {
-      Object.entries(groupObj as Record<string, unknown>).forEach(
-        ([propKey, value]) => {
-          if (Array.isArray(value)) {
-            value.forEach((item, index) => {
-              formData.append(`filter[${propKey}][${index}]`, String(item));
-            });
-          } else if (typeof value === "object" && value !== null) {
-            Object.entries(value as Record<string, unknown>).forEach(
-              ([subKey, subValue]) => {
-                formData.append(
-                  `filter[${propKey}][${subKey}]`,
-                  String(subValue)
-                );
-              }
-            );
-          }
-        }
-      );
-    });
-
-    return formData;
   }
 
   const catalogType: FilterType | undefined = filters.props.find(
@@ -245,16 +201,18 @@ export const ProductFilter: React.FC<ProductFilterProps> = ({ sectId }) => {
       <button
         type="button"
         className={styles["product-filter__submit"]}
-        onClick={() => {
+        onClick={async () => {
           if (filters) {
-            const payload = buildFilterPayload(filters, values);
-            console.log("Payload (JSON):", payload);
-            const formData = buildFormData(payload, sectId);
-            console.log("FormData entries:");
-            for (const [key, value] of formData.entries()) {
-              console.log(`${key} = ${value}`);
+            try {
+              const payload = buildFilterPayload(filters, values);
+              console.log("Payload (JSON):", payload);
+
+              const result = await applyFilter(sectId, payload);
+              console.log("Filter applied successfully:", result);
+            } catch (error) {
+              console.error("Error applying filter:", error);
+              // Здесь можно показать ошибку пользователю
             }
-            // Здесь можно отправить payload на сервер
           }
         }}
       >

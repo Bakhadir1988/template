@@ -1,29 +1,34 @@
-// Получение фильтров по разделу
-export async function getFilter(sect_id: string) {
-  const res = await fetch("/api/filter", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ sect_id }),
+// Применение фильтра: отправка выбранных значений
+export async function applyFilter(
+  sect_id: string,
+  filterValues: Record<string, unknown>
+) {
+  const formData = new FormData();
+
+  // Добавляем обязательные поля
+  formData.append("comp", "catblock");
+  formData.append("sect_id", sect_id);
+
+  // Добавляем фильтры, убираем [chars] и правильно обрабатываем объекты
+  Object.entries(filterValues).forEach(([propId, value]) => {
+    if (Array.isArray(value)) {
+      value.forEach((item, index) => {
+        formData.append(`filter[${propId}][${index}]`, String(item));
+      });
+    } else if (typeof value === "object" && value !== null) {
+      Object.entries(value as Record<string, unknown>).forEach(([key, val]) => {
+        formData.append(`filter[${propId}][${key}]`, String(val));
+      });
+    } else {
+      formData.append(`filter[${propId}]`, String(value));
+    }
   });
-  if (!res.ok) throw new Error("Ошибка загрузки фильтров");
+
+  const res = await fetch("https://litra-adm.workup.spb.ru/api/", {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!res.ok) throw new Error("Ошибка применения фильтра");
   return res.json();
 }
-
-// Применение фильтра: отправка выбранных значений
-// export async function applyFilter(
-//   sect_id: string,
-//   filterValues: Record<string, any>
-// ) {
-//   const params = new URLSearchParams({
-//     comp: "filter",
-//     sect_id,
-//     ...filterValues,
-//   });
-//   const res = await fetch(
-//     `https://litra-adm.workup.spb.ru/api/?${params.toString()}`
-//   );
-//   if (!res.ok) throw new Error("Ошибка применения фильтра");
-//   return res.json();
-// }
