@@ -1,30 +1,26 @@
+import { appendFilterValuesToFormData } from "@/shared/lib/utils/formDataHelpers";
+
 // Применение фильтра: отправка выбранных значений
 export async function applyFilter(
   sect_id: string,
   filterValues: Record<string, unknown>
 ) {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+  if (!apiUrl) {
+    throw new Error("API URL not configured");
+  }
+
   const formData = new FormData();
 
   // Добавляем обязательные поля
   formData.append("comp", "catblock");
   formData.append("sect_id", sect_id);
 
-  // Добавляем фильтры, убираем [chars] и правильно обрабатываем объекты
-  Object.entries(filterValues).forEach(([propId, value]) => {
-    if (Array.isArray(value)) {
-      value.forEach((item, index) => {
-        formData.append(`filter[${propId}][${index}]`, String(item));
-      });
-    } else if (typeof value === "object" && value !== null) {
-      Object.entries(value as Record<string, unknown>).forEach(([key, val]) => {
-        formData.append(`filter[${propId}][${key}]`, String(val));
-      });
-    } else {
-      formData.append(`filter[${propId}]`, String(value));
-    }
-  });
+  // Добавляем фильтры используя утилиту
+  appendFilterValuesToFormData(formData, filterValues);
 
-  const res = await fetch("https://litra-adm.workup.spb.ru/api/", {
+  const res = await fetch(`${apiUrl}`, {
     method: "POST",
     body: formData,
   });

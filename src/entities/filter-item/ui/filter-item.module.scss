@@ -33,6 +33,17 @@
   height: 16px;
 }
 
+.checkbox-group label.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  color: #999;
+}
+
+.checkbox-group label.disabled input[type="checkbox"] {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+
 .range-group {
   display: flex;
   flex-direction: column;

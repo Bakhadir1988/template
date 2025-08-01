@@ -4,6 +4,8 @@ export type FilterResponse = {
   summary: Record<string, unknown>;
 };
 
+export type FilterValues = Record<string, unknown>;
+
 export type FilterType = {
   type_id: string;
   type_name: string;

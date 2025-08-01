@@ -7,6 +7,7 @@ interface FilterItemProps {
   value?: unknown;
   onChange?: (value: unknown) => void;
   options?: string[];
+  optionLabels?: string[];
   disabledOptions?: number[];
   min?: number;
   max?: number;
@@ -18,6 +19,8 @@ export const FilterItem = ({
   value,
   onChange,
   options = [],
+  optionLabels,
+  disabledOptions = [],
   min = 0,
   max = 100,
 }: FilterItemProps) => {
@@ -35,16 +38,38 @@ export const FilterItem = ({
 
       {type === "checkbox" && (
         <div className="checkbox-group">
-          {options.map((option) => (
-            <label key={option}>
-              <input
-                type="checkbox"
-                checked={Array.isArray(value) && value.includes(option)}
-                onChange={(e) => handleCheckboxChange(option, e.target.checked)}
-              />
-              {option}
-            </label>
-          ))}
+          {options.map((option, index) => {
+            const isDisabled =
+              disabledOptions && disabledOptions.includes(index);
+
+            return (
+              <label
+                key={option}
+                className={`${isDisabled ? styles.disabled : ""}`}
+                style={{
+                  opacity: isDisabled ? 0.5 : 1,
+                  color: isDisabled ? "#999" : "inherit",
+                  cursor: isDisabled ? "not-allowed" : "pointer",
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={Array.isArray(value) && value.includes(option)}
+                  onChange={(e) =>
+                    handleCheckboxChange(option, e.target.checked)
+                  }
+                  disabled={isDisabled}
+                  style={{
+                    opacity: isDisabled ? 0.3 : 1,
+                    cursor: isDisabled ? "not-allowed" : "pointer",
+                  }}
+                />
+                {optionLabels && optionLabels[index]
+                  ? optionLabels[index]
+                  : option}
+              </label>
+            );
+          })}
         </div>
       )}
 
