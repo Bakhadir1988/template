@@ -1,0 +1,88 @@
+.product-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  max-width: 100%;
+}
+
+.product-filter__row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.product-filter__item {
+  margin-bottom: 0;
+}
+
+.product-filter__item-label {
+  font-size: 1rem;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.product-filter__checkbox-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.product-filter__checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.97rem;
+  cursor: pointer;
+}
+
+.product-filter__checkbox {
+  accent-color: #0070f3;
+  width: 16px;
+  height: 16px;
+}
+
+.product-filter__range {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.product-filter__range-sep {
+  color: #888;
+  font-size: 1.1em;
+}
+
+.product-filter__input {
+  width: 70px;
+  padding: 4px 8px;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+}
+.product-filter__input:focus {
+  border-color: #0070f3;
+}
+
+.product-filter__submit {
+  margin-top: 12px;
+  padding: 10px 0;
+  width: 100%;
+  background: #0070f3;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.08rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.product-filter__submit:hover {
+  background: #0059c9;
+}

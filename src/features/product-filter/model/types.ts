@@ -7,14 +7,14 @@ export type FilterResponse = {
 export type FilterType = {
   type_id: string;
   type_name: string;
-  groups: FilterGroup;
+  groups: Record<string, FilterGroup>;
 };
 
 export type FilterGroup = {
   group_id: string;
   tpl_key: string;
   variant: string;
-  props: FilterProp;
+  props: Record<string, FilterProp>;
 };
 
 export type FilterProp = {

@@ -1,11 +1,11 @@
 import { ProductCard } from "@/entities/product";
-import type { CatalogItemDto } from "@/shared/api/catalogApi";
+import type { CatalogItem } from "@/shared/api/catalogApi";
 import { mapCatalogItemToProduct } from "@/entities/product/model/mapper";
 
 import styles from "./catalog-list-widget.module.scss";
 
 interface CatalogListProps {
-  items: CatalogItemDto[];
+  items: CatalogItem[];
 }
 
 export const CatalogListWidget: React.FC<CatalogListProps> = ({ items }) => (

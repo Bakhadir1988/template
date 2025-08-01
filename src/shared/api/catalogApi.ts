@@ -1,5 +1,3 @@
-import axios from "axios";
-
 export type JsonLdBreadcrumbs = {
   "@context": string;
   "@type": string;
@@ -47,9 +45,13 @@ export type CatalogItem = {
 };
 
 export async function fetchCatalog(): Promise<CatalogSectionDto> {
-  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}catalog/`, {
-    validateStatus: () => true,
-  });
-  if (res.status !== 200) throw new Error("Ошибка получения данных");
-  return res.data;
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+  if (!apiUrl) {
+    throw new Error("API URL not configured");
+  }
+
+  const response = await fetch(`${apiUrl}catalog/`);
+  if (!response.ok) throw new Error("Ошибка получения данных");
+  return response.json();
 }

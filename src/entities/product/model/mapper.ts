@@ -1,7 +1,7 @@
-import { CatalogItemDto } from "@/shared/api/catalogApi";
+import { CatalogItem } from "@/shared/api/catalogApi";
 import { Product } from "./types";
 
-export function mapCatalogItemToProduct(dto: CatalogItemDto): Product {
+export function mapCatalogItemToProduct(dto: CatalogItem): Product {
   return {
     item_id: dto.item_id,
     title: dto.title,

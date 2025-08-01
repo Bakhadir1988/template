@@ -1,6 +1,5 @@
 "use client";
 
-import { FilterItem } from "@/entities/filter-item";
 import React, { useEffect, useState } from "react";
 import { getFilter } from "../api";
 import {
@@ -9,20 +8,21 @@ import {
   FilterResponse,
   FilterType,
 } from "../model/types";
+import { FilterItem } from "@/entities/filter-item";
+import styles from "./product-filter.module.scss";
 
-type FilterProps = {
+type FilterValues = Record<string, unknown>;
+
+type ProductFilterProps = {
   sectId: string;
 };
 
-export const ProductFilter: React.FC<FilterProps> = ({ sectId }) => {
+export const ProductFilter: React.FC<ProductFilterProps> = ({ sectId }) => {
   const [filters, setFilters] = useState<FilterResponse | null>(null);
-  const [values, setValues] = useState<FilterGroup[]>([]);
+  const [values, setValues] = useState<FilterValues>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  console.log("filters", filters?.props[1]);
-
-  // Получаем данные по id раздела
   useEffect(() => {
     setLoading(true);
     getFilter(sectId)
@@ -36,53 +36,230 @@ export const ProductFilter: React.FC<FilterProps> = ({ sectId }) => {
       });
   }, [sectId]);
 
-  // Фильтруем объекты по типу __nogroup и chars и записываем все в values
+  // Инициализация значений фильтров (ENUM и PRICE)
   useEffect(() => {
     if (!filters) return;
-    const catalogType: FilterType | undefined = filters?.props[1];
-
-    console.log("catalogType", catalogType);
-
-    if (!catalogType) return;
-    const groups = Object.values(catalogType.groups).filter(
-      (group) =>
-        typeof group === "object" &&
-        group !== null &&
-        "tpl_key" in group &&
-        (group.tpl_key === "__nogroup" || group.tpl_key === "chars")
+    const catalogType: FilterType | undefined = filters.props.find(
+      (t) => t.type_name !== "Корневой тип"
     );
-    setValues(groups); // Убери spread оператор
+    if (!catalogType) return;
+    const groups: FilterGroup[] = Object.values(catalogType.groups || {});
+    const initial: FilterValues = {};
+    for (const group of groups) {
+      const propsArr: FilterProp[] = Object.values(group.props || {});
+      for (const prop of propsArr) {
+        if (prop.filter_enabled !== "1") continue;
+        if (prop.type === "ENUM" && prop.filter) {
+          const checkedVariants = Object.entries(prop.filter)
+            .filter(([, v]) => v.enabled)
+            .map(([k]) => k);
+          if (checkedVariants.length > 0) {
+            initial[prop.prop_id] = checkedVariants;
+          }
+        }
+        if (prop.type === "PRICE" && prop.filter) {
+          const filterObj = prop.filter as Record<string, unknown>;
+          if (typeof filterObj.gt === "string" && filterObj.gt !== null) {
+            initial[`${prop.prop_id}_gt`] = filterObj.gt;
+          }
+          if (typeof filterObj.lt === "string" && filterObj.lt !== null) {
+            initial[`${prop.prop_id}_lt`] = filterObj.lt;
+          }
+        }
+      }
+    }
+    setValues(initial);
   }, [filters]);
 
   if (loading) return <div>Загрузка фильтров...</div>;
   if (error) return <div>{error}</div>;
   if (!filters) return null;
 
+  const handleFilterChange = (propId: string, value: unknown) => {
+    setValues((prev) => {
+      const updated = { ...prev, [propId]: value };
+      return updated;
+    });
+  };
+
+  const handleRangeChange = (propId: string, range: [number, number]) => {
+    setValues((prev) => {
+      const updated = {
+        ...prev,
+        [`${propId}_gt`]: range[0],
+        [`${propId}_lt`]: range[1],
+      };
+      return updated;
+    });
+  };
+
+  // Функция для формирования payload для бэка
+  function buildFilterPayload(
+    filters: FilterResponse,
+    values: Record<string, unknown>
+  ) {
+    const catalogType = filters.props.find(
+      (t) => t.type_name !== "Корневой тип"
+    );
+    if (!catalogType) return {};
+
+    const groups = Object.values(catalogType.groups || {});
+    const result: Record<string, unknown> = {};
+
+    for (const group of groups) {
+      const groupKey = group.tpl_key;
+      const propsArr = Object.values(group.props || {});
+      const groupObj: Record<string, unknown> = {};
+
+      for (const prop of propsArr) {
+        if (prop.type === "ENUM" && prop.filter) {
+          const val = values[prop.prop_id];
+          if (val !== undefined && Array.isArray(val) && val.length > 0) {
+            groupObj[prop.prop_id] = val;
+          }
+        }
+        if (prop.type === "PRICE" && prop.filter) {
+          const lt = values[`${prop.prop_id}_lt`];
+          const gt = values[`${prop.prop_id}_gt`];
+          if (lt !== undefined || gt !== undefined) {
+            groupObj[prop.prop_id] = {
+              lt: lt !== undefined ? lt : "",
+              gt: gt !== undefined ? gt : "",
+            };
+          }
+        }
+      }
+
+      if (Object.keys(groupObj).length > 0) {
+        result[groupKey] = groupObj;
+      }
+    }
+
+    return result;
+  }
+
+  // Функция для преобразования JSON payload в FormData
+  function buildFormData(
+    payload: Record<string, unknown>,
+    sectId: string
+  ): FormData {
+    const formData = new FormData();
+
+    // Добавляем обязательные поля
+    formData.append("comp", "filter");
+    formData.append("template", "filter");
+    formData.append("sect_id", sectId);
+
+    // Убираем уровни __nogroup и chars, все фильтры на верхнем уровне
+    Object.entries(payload).forEach(([, groupObj]) => {
+      Object.entries(groupObj as Record<string, unknown>).forEach(
+        ([propKey, value]) => {
+          if (Array.isArray(value)) {
+            value.forEach((item, index) => {
+              formData.append(`filter[${propKey}][${index}]`, String(item));
+            });
+          } else if (typeof value === "object" && value !== null) {
+            Object.entries(value as Record<string, unknown>).forEach(
+              ([subKey, subValue]) => {
+                formData.append(
+                  `filter[${propKey}][${subKey}]`,
+                  String(subValue)
+                );
+              }
+            );
+          }
+        }
+      );
+    });
+
+    return formData;
+  }
+
+  const catalogType: FilterType | undefined = filters.props.find(
+    (t) => t.type_name !== "Корневой тип"
+  );
+  if (!catalogType) return null;
+  const groups: FilterGroup[] = Object.values(catalogType.groups || {});
+
   return (
-    <form>
-      {values?.map((group: FilterGroup) => (
-        <div key={group.group_id}>
-          {Object.entries(group.props).map(([key, item]) => (
-            <div key={key}>{/* {console.log("item", item)} */}</div>
-          ))}
-        </div>
-      ))}
+    <form className={styles["product-filter"]}>
+      <div className={styles["product-filter__row"]}>
+        {groups.map((group) => {
+          const propsArr: FilterProp[] = Object.values(group.props || {});
+          return propsArr.map((prop) => {
+            if (prop.filter_enabled !== "1") return null;
+            if (prop.type === "ENUM" && prop.filter) {
+              const options = Object.entries(prop.filter).map(
+                ([key, variant]) => ({
+                  value: key,
+                  label: variant.label,
+                })
+              );
 
-      <FilterItem
-        type="checkbox"
-        label="Категория"
-        options={["Электроника", "Одежда", "Книги"]}
-        value={"11"}
-      />
+              return (
+                <FilterItem
+                  key={prop.prop_id}
+                  type="checkbox"
+                  label={prop.title}
+                  options={options.map((o) => o.label)}
+                  value={
+                    Array.isArray(values[prop.prop_id])
+                      ? (values[prop.prop_id] as string[])
+                      : []
+                  }
+                  onChange={(value) => handleFilterChange(prop.prop_id, value)}
+                />
+              );
+            }
+            if (prop.type === "PRICE") {
+              const filterObj = prop.filter as Record<string, unknown>;
+              const min = filterObj.min;
+              const max = filterObj.max;
+              const currentRange: [number, number] = [
+                values[`${prop.prop_id}_gt`] !== undefined
+                  ? Number(values[`${prop.prop_id}_gt`])
+                  : Number(min) || 0,
+                values[`${prop.prop_id}_lt`] !== undefined
+                  ? Number(values[`${prop.prop_id}_lt`])
+                  : Number(max) || 100,
+              ];
 
-      <FilterItem type="range" label="Цена" value={"11"} min={0} max={1000} />
-
-      <FilterItem
-        type="checkbox"
-        label="Бренд"
-        options={["Apple", "Samsung", "Nike"]}
-        value={"11"}
-      />
+              return (
+                <FilterItem
+                  key={prop.prop_id}
+                  type="range"
+                  label={prop.title}
+                  min={Number(min) || 0}
+                  max={Number(max) || 100}
+                  value={currentRange}
+                  onChange={(value) =>
+                    handleRangeChange(prop.prop_id, value as [number, number])
+                  }
+                />
+              );
+            }
+            return null;
+          });
+        })}
+      </div>
+      <button
+        type="button"
+        className={styles["product-filter__submit"]}
+        onClick={() => {
+          if (filters) {
+            const payload = buildFilterPayload(filters, values);
+            console.log("Payload (JSON):", payload);
+            const formData = buildFormData(payload, sectId);
+            console.log("FormData entries:");
+            for (const [key, value] of formData.entries()) {
+              console.log(`${key} = ${value}`);
+            }
+            // Здесь можно отправить payload на сервер
+          }
+        }}
+      >
+        Применить фильтр
+      </button>
     </form>
   );
 };

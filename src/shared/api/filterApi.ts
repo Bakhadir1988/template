@@ -1,8 +1,12 @@
 // Получение фильтров по разделу
 export async function getFilter(sect_id: string) {
-  const res = await fetch(
-    `https://litra-adm.workup.spb.ru/api/?comp=filter&sect_id=${sect_id}`
-  );
+  const res = await fetch("/api/filter", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ sect_id }),
+  });
   if (!res.ok) throw new Error("Ошибка загрузки фильтров");
   return res.json();
 }
