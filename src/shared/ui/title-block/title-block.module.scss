@@ -1,0 +1,13 @@
+.root {
+  margin-bottom: var(--base-offset);
+
+  h1 {
+    margin: 0;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}

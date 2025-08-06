@@ -97,5 +97,5 @@
     "*.copilotmd": "vscode.markdown.preview.editor",
     "*.svg": "default"
   },
-  "cSpell.words": ["valuefield"]
+  "cSpell.words": ["catblock", "catsections", "pagi", "valuefield"]
 }

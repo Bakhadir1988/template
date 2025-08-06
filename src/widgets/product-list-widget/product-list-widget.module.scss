@@ -1,0 +1,19 @@
+.root {
+  margin-bottom: var(--section-offset-vertical);
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+  gap: 20px;
+}

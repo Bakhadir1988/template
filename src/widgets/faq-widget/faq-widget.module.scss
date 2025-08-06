@@ -1,0 +1,17 @@
+.root {
+  margin-bottom: var(--section-offset-vertical);
+}
+
+.title {
+  margin-bottom: 20px;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  h2 {
+    margin: 0;
+  }
+}
