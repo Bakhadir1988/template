@@ -8,17 +8,10 @@ export async function getCatalog(slug: string): Promise<CatalogType | null> {
     return null;
   }
 
-  console.log('slug111', slug);
-
   const url = `${baseUrl}${slug}/`;
-  console.log('API URL:', url);
 
   try {
-    const response = await fetch(url, {
-      next: {
-        revalidate: 1000,
-      },
-    });
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }

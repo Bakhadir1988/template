@@ -3,11 +3,10 @@ import {
   CatalogPagination,
   CatalogSection,
 } from '@/shared/types/catalogTypes';
-import { Tags } from '@/shared/ui';
-import { TitleBlock } from '@/shared/ui/title-block';
+import { Breadcrumbs, Tags, TitleBlock } from '@/shared/ui';
 import { FaqWidget, ProductListWidget, SectionWidget } from '@/widgets';
 
-type CatalogWidgetProps = {
+type CatalogPageProps = {
   items: CatalogItem[];
   pagi: CatalogPagination;
   section: CatalogSection;
@@ -16,7 +15,7 @@ type CatalogWidgetProps = {
   upperTags?: CatalogSection[];
 };
 
-export const CatalogWidget: React.FC<CatalogWidgetProps> = ({
+export const CatalogPageView: React.FC<CatalogPageProps> = ({
   items,
   section,
   sections,
@@ -25,6 +24,7 @@ export const CatalogWidget: React.FC<CatalogWidgetProps> = ({
 }) => {
   return (
     <main>
+      <Breadcrumbs path={section.__path} />
       <TitleBlock title={section.title} />
       <SectionWidget sections={sections} />
       <Tags tags={upperTags || []} />

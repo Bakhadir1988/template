@@ -12,13 +12,16 @@ export const ProductItem = ({ item }: { item: CatalogItem }) => {
     <div className={styles.root}>
       <div className={styles.image}>
         {item.imgs && item.imgs.length > 0 && (
-          <Image
-            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${item.imgs[0]}`}
-            alt={item.title}
-            width={235}
-            height={270}
-            priority
-          />
+          <div className={styles.image__wrapper}>
+            <Image
+              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${item.imgs[0]}`}
+              alt={item.title}
+              priority
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              style={{ objectFit: 'contain' }}
+            />
+          </div>
         )}
       </div>
       <div className={styles.info}>

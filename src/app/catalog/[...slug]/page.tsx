@@ -1,5 +1,7 @@
+import { Metadata } from 'next';
+
 import { getCatalog } from '@/shared/api/catalogApi';
-import { CatalogWidget } from '@/widgets';
+import { CatalogPageView, ProductDetailPageView } from '@/views';
 
 interface CatalogSectionPageProps {
   params: Promise<{
@@ -7,26 +9,56 @@ interface CatalogSectionPageProps {
   }>;
 }
 
+export async function generateMetadata({
+  params,
+}: CatalogSectionPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const currentSlug = Array.isArray(slug) ? slug.join('/') : slug;
+
+  const data = await getCatalog(`catalog/${currentSlug}`);
+
+  if (!data) {
+    return {
+      title: 'Каталог',
+      description: 'Каталог товаров',
+    };
+  }
+
+  const { meta } = data;
+
+  return {
+    title: meta.seo_title,
+    description: meta.seo_description,
+    keywords: meta.seo_keywords,
+    robots: meta.robots || 'index, follow',
+    openGraph: {
+      title: meta.seo_title,
+      description: meta.seo_description,
+      type: 'website',
+    },
+  };
+}
+
 export default async function CatalogSectionPage({
   params,
 }: CatalogSectionPageProps) {
   const { slug } = await params;
-
   const currentSlug = Array.isArray(slug) ? slug.join('/') : slug;
 
-  try {
-    const data = await getCatalog(`catalog/${currentSlug}`);
+  const data = await getCatalog(`catalog/${currentSlug}`);
 
-    if (!data) {
-      return <div>Данные не найдены</div>;
-    }
+  if (!data) {
+    return <div>Данные не найдены</div>;
+  }
 
-    console.log('data', data);
+  console.log('data', data);
 
-    const { items, pagi, section, sections, lower_tags, upper_tags } = data;
+  const { items, pagi, section, sections, lower_tags, upper_tags } = data;
 
+  // Если items - массив, показываем каталог
+  if (Array.isArray(items)) {
     return (
-      <CatalogWidget
+      <CatalogPageView
         items={items}
         pagi={pagi}
         section={section}
@@ -35,8 +67,8 @@ export default async function CatalogSectionPage({
         upperTags={upper_tags}
       />
     );
-  } catch (error) {
-    console.error('Ошибка загрузки каталога:', error);
-    return <div>Ошибка загрузки каталога</div>;
   }
+
+  // Иначе показываем товар
+  return <ProductDetailPageView data={data} />;
 }

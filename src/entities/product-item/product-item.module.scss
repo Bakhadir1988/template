@@ -19,8 +19,10 @@
   padding: 20px;
   min-height: 310px;
 
-  img {
-    object-fit: contain;
+  &__wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
   }
 }
 

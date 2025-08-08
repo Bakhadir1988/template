@@ -1,4 +1,4 @@
-@use "@/shared/styles/mixins" as *;
+@use '@/shared/styles/mixins' as *;
 
 *,
 *::before,
@@ -50,4 +50,8 @@ body {
 
 svg {
   fill: currentColor;
+}
+
+img {
+  max-width: 100%;
 }
