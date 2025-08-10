@@ -1,0 +1,125 @@
+.root {
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 10px;
+  background: #fff;
+  min-width: fit-content;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+  position: relative;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.current {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.order {
+  appearance: none;
+  border: 1px solid var(--border, #e5e7eb);
+  background: #fff;
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arrow {
+  margin-left: 4px;
+  transition: transform 0.2s ease;
+  color: var(--color-text-secondary, #6b7280);
+}
+
+.arrow.expanded {
+  transform: rotate(180deg);
+}
+
+.content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+  background: #fff;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    visibility 0.2s ease;
+  min-width: 200px;
+  width: max-content;
+  max-width: 320px;
+}
+
+.content.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.group {
+  display: grid;
+  gap: 8px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.radio {
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 50%;
+  background: #fff;
+}
+
+.indicator {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    var(--primary, #111827) 45%,
+    transparent 46%
+  );
+}
+
+.label {
+  font-size: 14px;
+}
+
+.clearIcon {
+  color: var(--color-text-secondary, #6b7280);
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  transition: color 0.2s ease;
+  border-radius: 3px;
+  padding: 1px;
+}
+
+.clearIcon:hover {
+  color: var(--color-text, #111827);
+  background: rgba(0, 0, 0, 0.05);
+}

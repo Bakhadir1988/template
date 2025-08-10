@@ -1,0 +1,45 @@
+.root {
+  display: grid;
+  gap: 8px;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 20px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.radio {
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 50%;
+  background: #fff;
+  transition: border-color 0.2s ease;
+}
+
+.radio:hover {
+  border-color: var(--primary, #111827);
+}
+
+.radio[data-state=checked] {
+  border-color: var(--primary, #111827);
+}
+
+.indicator {
+  display: grid;
+  place-items: center;
+  color: var(--primary, #111827);
+}
+
+.label {
+  font-size: 14px;
+  color: var(--color-text, #111827);
+}
+
+.count {
+  font-size: 12px;
+  color: var(--color-text-secondary, #6b7280);
+}

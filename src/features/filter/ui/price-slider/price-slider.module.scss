@@ -1,0 +1,57 @@
+.root {
+  display: grid;
+  gap: 12px;
+  min-width: 200px;
+}
+
+.inputs {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.input {
+  flex: 1;
+  min-width: 60px;
+  max-width: 80px;
+  padding: 6px 8px;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.separator {
+  color: var(--color-text-secondary, #6b7280);
+}
+
+.slider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 20px;
+}
+
+.track {
+  position: relative;
+  background-color: #e5e7eb;
+  height: 4px;
+  flex-grow: 1;
+  border-radius: 999px;
+}
+
+.range {
+  position: absolute;
+  background-color: var(--primary, #111827);
+  height: 100%;
+  border-radius: 999px;
+}
+
+.thumb {
+  display: block;
+  width: 16px;
+  height: 16px;
+  background-color: #fff;
+  border: 2px solid var(--primary, #111827);
+  border-radius: 50%;
+  cursor: pointer;
+}

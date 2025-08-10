@@ -4,7 +4,12 @@ import {
   CatalogSection,
 } from '@/shared/types/catalogTypes';
 import { Breadcrumbs, Tags, TitleBlock } from '@/shared/ui';
-import { FaqWidget, ProductListWidget, SectionWidget } from '@/widgets';
+import {
+  FaqWidget,
+  FilterWidget,
+  ProductListWidget,
+  SectionWidget,
+} from '@/widgets';
 
 type CatalogPageProps = {
   items: CatalogItem[];
@@ -28,6 +33,7 @@ export const CatalogPageView: React.FC<CatalogPageProps> = ({
       <TitleBlock title={section.title} />
       <SectionWidget sections={sections} />
       <Tags tags={upperTags || []} />
+      <FilterWidget sectionId={section.item_id} />
       <ProductListWidget items={items} />
       <FaqWidget items={section.faq} />
       <Tags tags={lowerTags || []} />

@@ -1,0 +1,53 @@
+.root {
+  display: grid;
+  gap: 6px;
+  min-width: fit-content;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 4px;
+  background: #fff;
+  transition: border-color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.checkbox:hover {
+  border-color: var(--primary, #111827);
+}
+
+.checkbox[data-state='checked'] {
+  background: var(--primary, #111827);
+  border-color: var(--primary, #111827);
+}
+
+.indicator {
+  display: grid;
+  place-items: center;
+  color: white;
+}
+
+.label {
+  font-size: 14px;
+  color: var(--color-text, #111827);
+}
+
+.count {
+  font-size: 12px;
+  color: var(--color-text-secondary, #6b7280);
+  margin-left: auto;
+  flex-shrink: 0;
+}

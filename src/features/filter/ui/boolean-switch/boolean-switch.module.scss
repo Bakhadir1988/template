@@ -1,0 +1,40 @@
+.root {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.label {
+  font-size: 14px;
+  color: var(--color-text, #111827);
+}
+
+.switch {
+  width: 44px;
+  height: 24px;
+  background-color: #e5e7eb;
+  border-radius: 999px;
+  position: relative;
+  transition: background-color 150ms ease;
+}
+
+.switch[data-state=checked] {
+  background: rgba(17, 24, 39, 0.2);
+}
+
+.thumb {
+  display: block;
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: transform 150ms ease, background-color 150ms ease;
+  transform: translateX(2px);
+}
+
+.switch[data-state=checked] .thumb {
+  transform: translateX(22px);
+  background: var(--primary, #111827);
+}

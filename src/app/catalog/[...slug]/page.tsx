@@ -51,8 +51,6 @@ export default async function CatalogSectionPage({
     return <div>Данные не найдены</div>;
   }
 
-  console.log('data', data);
-
   const { items, pagi, section, sections, lower_tags, upper_tags } = data;
 
   // Если items - массив, показываем каталог
