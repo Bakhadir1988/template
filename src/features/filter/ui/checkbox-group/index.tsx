@@ -27,21 +27,26 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
 
   return (
     <div className={styles.root}>
-      {Object.entries(options).map(([value, option]) => (
-        <label key={value} className={styles.item}>
-          <Checkbox.Root
-            className={styles.checkbox}
-            checked={values.includes(value)}
-            onCheckedChange={() => handleToggle(value)}
-          >
-            <Checkbox.Indicator className={styles.indicator}>
-              <CheckIcon width={14} height={14} />
-            </Checkbox.Indicator>
-          </Checkbox.Root>
-          <span className={styles.label}>{option.label}</span>
-          <span className={styles.count}>({option.total_count})</span>
-        </label>
-      ))}
+      {Object.entries(options).map(([value, option]) => {
+        const count = Number(option.current_count || option.total_count || '0');
+        const disabled = count <= 0;
+        return (
+          <label key={value} className={styles.item}>
+            <Checkbox.Root
+              className={styles.checkbox}
+              checked={values.includes(value)}
+              disabled={disabled}
+              onCheckedChange={() => !disabled && handleToggle(value)}
+            >
+              <Checkbox.Indicator className={styles.indicator}>
+                <CheckIcon width={14} height={14} />
+              </Checkbox.Indicator>
+            </Checkbox.Root>
+            <span className={styles.label}>{option.label}</span>
+            <span className={styles.count}>({count})</span>
+          </label>
+        );
+      })}
     </div>
   );
 };
