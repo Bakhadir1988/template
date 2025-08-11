@@ -7,9 +7,7 @@ export const getFilter = async (
     `${process.env.NEXT_PUBLIC_FILTER_ID}${sectionId}`,
     {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
     },
   );
 

@@ -6,23 +6,33 @@ import { FilterPanel } from '@/features/filter';
 import { getFilter } from '@/features/filter/api';
 import type { SelectedValues } from '@/features/filter/model/types';
 import { FilterPropType, FilterResponse } from '@/features/filter/model/types';
+import { Pagination } from '@/features/pagination/ui';
 import { SortFilter, SortState } from '@/features/sort';
 import { postCatalogFilters } from '@/shared/api/catalogApi';
-import type { CatalogItem } from '@/shared/types/catalogTypes';
+import type {
+  CatalogItem,
+  CatalogPagination,
+} from '@/shared/types/catalogTypes';
+import { LoadingSpinner } from '@/shared/ui';
 
 import { ProductListWidget } from '../product-list-widget';
 
 export const FilterWidget = ({
   sectionId,
   initialItems,
+  pagi,
 }: {
   sectionId: string;
   initialItems?: CatalogItem[];
+  pagi: CatalogPagination;
 }) => {
   const [filterConfig, setFilterConfig] = useState<FilterResponse | null>(null);
   const [items, setItems] = useState<CatalogItem[] | undefined>(initialItems);
+  const [pagination, setPagination] = useState<CatalogPagination>(pagi);
+  const [isLoading, setIsLoading] = useState(false);
   const selectedRef = useRef<SelectedValues>({});
   const debounceTimer = useRef<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(pagi.current_page);
 
   // Получаем фильтр
   useEffect(() => {
@@ -88,18 +98,59 @@ export const FilterWidget = ({
     return form;
   };
 
+  // Запрос на обновление фильтра
   const requestUpdate = (selected: SelectedValues) => {
     selectedRef.current = selected;
     if (debounceTimer.current) {
       window.clearTimeout(debounceTimer.current);
     }
     debounceTimer.current = window.setTimeout(async () => {
-      const form = buildFormData(selectedRef.current);
-      const catalog = await postCatalogFilters(form);
-      setItems(catalog?.items || []);
+      setIsLoading(true);
+      try {
+        const form = buildFormData(selectedRef.current);
+        const catalog = await postCatalogFilters(form);
+        if (catalog) {
+          setItems(catalog.items || []);
+          if (catalog.pagi) {
+            setPagination(catalog.pagi);
+            setCurrentPage(1);
+          }
+        } else {
+          console.error('Не удалось получить данные каталога');
+        }
+      } catch (error) {
+        console.error('Ошибка при обновлении фильтра:', error);
+      } finally {
+        setIsLoading(false);
+      }
     }, 400);
   };
 
+  // Запрос на обновление страницы
+  const requestPageUpdate = async (page: number) => {
+    setIsLoading(true);
+    try {
+      setCurrentPage(page);
+      const form = buildFormData(selectedRef.current);
+      // Добавляем параметр страницы
+      form.append('page', String(page));
+      const catalog = await postCatalogFilters(form);
+      if (catalog) {
+        setItems(catalog.items || []);
+        if (catalog.pagi) {
+          setPagination(catalog.pagi);
+        }
+      } else {
+        console.error('Не удалось получить данные каталога для страницы', page);
+      }
+    } catch (error) {
+      console.error('Ошибка при загрузке страницы:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Очистка таймера
   useEffect(() => {
     return () => {
       if (debounceTimer.current) window.clearTimeout(debounceTimer.current);
@@ -108,15 +159,23 @@ export const FilterWidget = ({
 
   return (
     <>
-      <FilterPanel
-        config={filter}
-        onChange={(selected) => requestUpdate(selected)}
-        extraRight={<SortFilter value={sort} onChange={setSort} />}
-      />
       {items && items.length ? (
-        <div style={{ marginTop: 16 }}>
+        <>
+          <FilterPanel
+            config={filter}
+            onChange={(selected) => requestUpdate(selected)}
+            extraRight={<SortFilter value={sort} onChange={setSort} />}
+          />
+          {/* {isLoading && <LoadingSpinner text="Обновление товаров..." />} */}
           <ProductListWidget items={items} />
-        </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={pagination.total_pages}
+            onPageChange={isLoading ? () => {} : requestPageUpdate}
+            totalItems={parseInt(pagination.total_items)}
+            itemsPerPage={parseInt(pagination.items_per_page)}
+          />
+        </>
       ) : null}
     </>
   );

@@ -1,0 +1,160 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.info {
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+}
+
+/* Основной контейнер пагинации */
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Страницы */
+.page {
+  margin: 0;
+}
+
+.pageLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  background: white;
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.pageLink:hover {
+  background: #f8f9fa;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* Активная страница */
+.active .pageLink {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.active .pageLink:hover {
+  cursor: default;
+}
+
+/* Кнопки предыдущая/следующая */
+.previous,
+.next {
+  margin: 0;
+}
+
+.previousLink,
+.nextLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  background: white;
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.previousLink:hover,
+.nextLink:hover {
+  background: #f8f9fa;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* Отключенные кнопки */
+.disabled .previousLink,
+.disabled .nextLink {
+  background: #f8f9fa;
+  color: #ccc;
+  cursor: not-allowed;
+  border-color: #e9ecef;
+}
+
+.disabled .previousLink:hover,
+.disabled .nextLink:hover {
+  background: #f8f9fa;
+  color: #ccc;
+  border-color: #e9ecef;
+}
+
+/* Разделитель */
+.break {
+  margin: 0;
+}
+
+.breakLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: #666;
+  cursor: default;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .container {
+    gap: 12px;
+    padding: 16px 0;
+  }
+
+  .pagination {
+    gap: 4px;
+  }
+
+  .pageLink,
+  .previousLink,
+  .nextLink {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+
+  .info {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pageLink,
+  .previousLink,
+  .nextLink {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+
+  .pagination {
+    gap: 2px;
+  }
+}

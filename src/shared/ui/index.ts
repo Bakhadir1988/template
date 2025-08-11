@@ -7,3 +7,4 @@ export { AccordionUi } from './accordion';
 export { Tags } from './tags';
 export { Breadcrumbs } from './breadcrumbs';
 export { TabsUi } from './tabs-ui';
+export { LoadingSpinner } from './loading-spinner';

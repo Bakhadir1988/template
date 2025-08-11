@@ -37,21 +37,12 @@ export async function postCatalogFilters(
   try {
     const response = await fetch(url, {
       method: 'POST',
-      headers: {
-        Accept: 'application/json',
-      },
       body: form,
     });
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    const contentType = response.headers.get('content-type') || '';
-    if (contentType.includes('application/json')) {
-      return (await response.json()) as CatalogType;
-    }
-    // Сервер вернул не JSON (например, HTML/текст). Безопасно вернём null.
-    console.error('Unexpected response content-type:', contentType);
-    return null;
+    return (await response.json()) as CatalogType;
   } catch (error) {
     console.error('Failed to post catalog filters:', error);
     throw error;
