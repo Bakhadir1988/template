@@ -1,10 +1,6 @@
-import {
-  CatalogItem,
-  CatalogPagination,
-  CatalogSection,
-} from '@/shared/types/catalogTypes';
+import { CatalogItem, CatalogPagination, CatalogSection } from '@/shared/types';
 import { Breadcrumbs, Tags, TitleBlock } from '@/shared/ui';
-import { FaqWidget, FilterWidget, SectionWidget } from '@/widgets';
+import { CatalogWidget, FaqWidget, SectionWidget } from '@/widgets';
 
 type CatalogPageProps = {
   items: CatalogItem[];
@@ -31,7 +27,7 @@ export const CatalogPageView: React.FC<CatalogPageProps> = ({
       <TitleBlock title={section.title} />
       <SectionWidget sections={sections} />
       <Tags tags={upperTags || []} />
-      <FilterWidget
+      <CatalogWidget
         sectionId={section.item_id}
         initialItems={items}
         pagi={pagi}

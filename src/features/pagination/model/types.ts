@@ -1,4 +1,4 @@
-export type Pagination = {
+export type PaginationProps = {
   total_items: string;
   items_per_page: string;
   total_pages: number;

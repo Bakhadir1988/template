@@ -6,27 +6,42 @@ import type { SortField, SortOption, SortState } from '../../model/types';
 import styles from './sort-filter.module.scss';
 
 const SORT_OPTIONS: Record<SortOption, string> = {
-  'title;asc': 'По алфавиту Я-А',
-  'title;desc': 'По алфавиту А-Я',
-  'price;asc': 'По убыванию цены',
-  'price;desc': 'По возрастанию цены',
+  'title;asc': 'По алфавиту А-Я',
+  'title;desc': 'По алфавиту Я-А',
+  'price;asc': 'По возрастанию цены',
+  'price;desc': 'По убыванию цены',
 };
 
 type SortFilterProps = {
-  value: SortState;
+  value: SortState | null;
   onChange: (next: SortState) => void;
 };
 
 export const SortFilter: React.FC<SortFilterProps> = ({ value, onChange }) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
 
-  const currentOption = `${value.field};${value.order}` as SortOption;
+  const currentOption = value
+    ? (`${value.field};${value.order}` as SortOption)
+    : null;
 
-  console.log('currentOption', currentOption);
+  // Скрываем выпадающий блок при изменении значения
+  React.useEffect(() => {
+    setIsExpanded(false);
+  }, [value]);
 
   const handleOptionChange = (option: SortOption): void => {
     const [field, order] = option.split(';') as [SortField, 'asc' | 'desc'];
     onChange({ field, order });
+  };
+
+  // Определяем, что показывать в заголовке
+  const getDisplayText = () => {
+    // Если сортировка не выбрана, показываем "Сортировка"
+    if (!currentOption) {
+      return 'Сортировка';
+    }
+    // Показываем название выбранной сортировки
+    return SORT_OPTIONS[currentOption];
   };
 
   return (
@@ -36,7 +51,7 @@ export const SortFilter: React.FC<SortFilterProps> = ({ value, onChange }) => {
       onMouseLeave={() => setIsExpanded(false)}
     >
       <div className={styles.header} onClick={() => setIsExpanded((v) => !v)}>
-        <div className={styles.current}>Сортировка</div>
+        <div className={styles.current}>{getDisplayText()}</div>
 
         <ChevronDownIcon
           className={`${styles.arrow} ${isExpanded ? styles.expanded : ''}`}
@@ -48,6 +63,7 @@ export const SortFilter: React.FC<SortFilterProps> = ({ value, onChange }) => {
       >
         <RadioGroup.Root
           className={styles.group}
+          value={currentOption || undefined}
           onValueChange={(v) => handleOptionChange(v as SortOption)}
         >
           {(Object.keys(SORT_OPTIONS) as SortOption[]).map((option) => (

@@ -8,3 +8,4 @@ export { Tags } from './tags';
 export { Breadcrumbs } from './breadcrumbs';
 export { TabsUi } from './tabs-ui';
 export { LoadingSpinner } from './loading-spinner';
+export { Menu } from './menu';

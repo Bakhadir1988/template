@@ -11,12 +11,12 @@ export const ProductDetailPageView = ({ data }: { data: ProductType }) => {
     { title: data.title, url: '', item_id: data.item_id },
   ];
 
-  const characteristics = Object.entries(data.chars).map(([key, value]) => {
-    return {
-      label: key,
-      value,
-    };
-  });
+  // const characteristics = Object.entries(data.chars).map(([key, value]) => {
+  //   return {
+  //     label: key,
+  //     value,
+  //   };
+  // });
 
   return (
     <main className={styles.root}>

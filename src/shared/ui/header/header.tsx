@@ -1,4 +1,4 @@
-import { MenuSection } from '@/shared/types/menuType';
+import { MenuSection } from '@/shared/types';
 import { Menu } from '@/shared/ui';
 
 import styles from './header.module.css';
