@@ -13,7 +13,6 @@ import type {
   CatalogItem,
   CatalogPagination,
 } from '@/shared/types/catalogTypes';
-import { LoadingSpinner } from '@/shared/ui';
 
 import { ProductListWidget } from '../product-list-widget';
 
@@ -60,9 +59,26 @@ export const FilterWidget = ({
 
   // Сортировка
   const [sort, setSort] = React.useState<SortState>({
-    field: 'alphabet',
-    order: 'asc',
+    field: 'title',
+    order: 'desc',
   });
+
+  // Обработчик изменения сортировки
+  const handleSortChange = (newSort: SortState) => {
+    console.log('handleSortChange вызван с новыми значениями:', newSort);
+    setSort(newSort);
+    // Обновляем товары при изменении сортировки
+    if (selectedRef.current) {
+      console.log(
+        'Вызываем requestUpdate с текущими фильтрами:',
+        selectedRef.current,
+      );
+      requestUpdate(selectedRef.current);
+    } else {
+      console.log('Нет выбранных фильтров, отправляем пустой запрос');
+      requestUpdate({});
+    }
+  };
 
   // Преобразование выбранных значений -> FormData
   const buildFormData = (selected: SelectedValues): FormData => {
@@ -70,6 +86,21 @@ export const FilterWidget = ({
     form.append('comp', 'catblock');
     form.append('template', 'filter');
     form.append('sect_id', sectionId);
+
+    // Добавляем параметры сортировки
+    form.append('sort', `${sort.field};${sort.order}`);
+
+    console.log('Добавляем параметры сортировки в FormData:', {
+      sort: `${sort.field};${sort.order}`,
+      field: sort.field,
+      order: sort.order,
+    });
+
+    // Проверим содержимое FormData
+    console.log('Содержимое FormData после добавления сортировки:');
+    for (const [key, value] of form.entries()) {
+      console.log(`${key}: ${value}`);
+    }
 
     Object.entries(selected).forEach(([propId, raw]) => {
       if (raw === undefined || raw === null) return;
@@ -108,6 +139,10 @@ export const FilterWidget = ({
       setIsLoading(true);
       try {
         const form = buildFormData(selectedRef.current);
+        console.log('Отправляем запрос с сортировкой:', {
+          field: sort.field,
+          order: sort.order,
+        });
         const catalog = await postCatalogFilters(form);
         if (catalog) {
           setItems(catalog.items || []);
@@ -134,6 +169,11 @@ export const FilterWidget = ({
       const form = buildFormData(selectedRef.current);
       // Добавляем параметр страницы
       form.append('page', String(page));
+      console.log('Отправляем запрос пагинации с сортировкой:', {
+        page,
+        field: sort.field,
+        order: sort.order,
+      });
       const catalog = await postCatalogFilters(form);
       if (catalog) {
         setItems(catalog.items || []);
@@ -164,7 +204,7 @@ export const FilterWidget = ({
           <FilterPanel
             config={filter}
             onChange={(selected) => requestUpdate(selected)}
-            extraRight={<SortFilter value={sort} onChange={setSort} />}
+            extraRight={<SortFilter value={sort} onChange={handleSortChange} />}
           />
           {/* {isLoading && <LoadingSpinner text="Обновление товаров..." />} */}
           <ProductListWidget items={items} />

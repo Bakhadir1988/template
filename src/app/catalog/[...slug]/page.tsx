@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 import { getCatalog } from '@/shared/api/catalogApi';
-import { CatalogPageView, ProductDetailPageView } from '@/views';
+import { CatalogPageView } from '@/views';
 
 interface CatalogSectionPageProps {
   params: Promise<{
@@ -68,5 +68,6 @@ export default async function CatalogSectionPage({
   }
 
   // Иначе показываем товар
-  return <ProductDetailPageView data={data} />;
+  // return <ProductDetailPageView data={data} />;
+  return <div>test</div>;
 }

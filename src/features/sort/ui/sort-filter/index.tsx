@@ -2,13 +2,14 @@ import { ChevronDownIcon } from '@radix-ui/react-icons';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import React from 'react';
 
-import type { SortField, SortState } from '../../model/types';
+import type { SortField, SortOption, SortState } from '../../model/types';
 import styles from './sort-filter.module.scss';
 
-const FIELD_LABEL: Record<SortField, string> = {
-  alphabet: 'По алфавиту',
-  price: 'По цене',
-  rating: 'По рейтингу',
+const SORT_OPTIONS: Record<SortOption, string> = {
+  'title;asc': 'По алфавиту Я-А',
+  'title;desc': 'По алфавиту А-Я',
+  'price;asc': 'По убыванию цены',
+  'price;desc': 'По возрастанию цены',
 };
 
 type SortFilterProps = {
@@ -19,8 +20,13 @@ type SortFilterProps = {
 export const SortFilter: React.FC<SortFilterProps> = ({ value, onChange }) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
 
-  const setField = (field: SortField): void => {
-    onChange({ field, order: value.order });
+  const currentOption = `${value.field};${value.order}` as SortOption;
+
+  console.log('currentOption', currentOption);
+
+  const handleOptionChange = (option: SortOption): void => {
+    const [field, order] = option.split(';') as [SortField, 'asc' | 'desc'];
+    onChange({ field, order });
   };
 
   return (
@@ -30,7 +36,7 @@ export const SortFilter: React.FC<SortFilterProps> = ({ value, onChange }) => {
       onMouseLeave={() => setIsExpanded(false)}
     >
       <div className={styles.header} onClick={() => setIsExpanded((v) => !v)}>
-        <div className={styles.current}>{FIELD_LABEL[value.field]}</div>
+        <div className={styles.current}>Сортировка</div>
 
         <ChevronDownIcon
           className={`${styles.arrow} ${isExpanded ? styles.expanded : ''}`}
@@ -42,15 +48,14 @@ export const SortFilter: React.FC<SortFilterProps> = ({ value, onChange }) => {
       >
         <RadioGroup.Root
           className={styles.group}
-          value={value.field}
-          onValueChange={(v) => setField(v as SortField)}
+          onValueChange={(v) => handleOptionChange(v as SortOption)}
         >
-          {(['alphabet', 'price', 'rating'] as SortField[]).map((field) => (
-            <label key={field} className={styles.item}>
-              <RadioGroup.Item className={styles.radio} value={field}>
+          {(Object.keys(SORT_OPTIONS) as SortOption[]).map((option) => (
+            <label key={option} className={styles.item}>
+              <RadioGroup.Item className={styles.radio} value={option}>
                 <RadioGroup.Indicator className={styles.indicator} />
               </RadioGroup.Item>
-              <span className={styles.label}>{FIELD_LABEL[field]}</span>
+              <span className={styles.label}>{SORT_OPTIONS[option]}</span>
             </label>
           ))}
         </RadioGroup.Root>
