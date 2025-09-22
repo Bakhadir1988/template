@@ -19,8 +19,6 @@ export const CatalogPageView: React.FC<CatalogPageProps> = ({
   lowerTags,
   upperTags,
 }) => {
-  console.log('pagi', pagi);
-
   return (
     <main>
       <Breadcrumbs path={section.__path} />

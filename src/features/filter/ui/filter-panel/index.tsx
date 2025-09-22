@@ -29,6 +29,8 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
     }, 0);
   }, [selected]);
 
+  console.log('initial', initial);
+
   const handleChange = (id: string, val: SelectedValues[string]) => {
     setSelected((prev) => {
       const next: SelectedValues = { ...prev, [id]: val };

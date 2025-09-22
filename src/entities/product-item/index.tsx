@@ -2,12 +2,39 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
+import { addToFavorites, removeFromFavorites } from '@/shared/api';
+import { addToCompare } from '@/shared/api';
 import { CatalogItem } from '@/shared/types/catalogTypes';
 import { Button } from '@/shared/ui';
 
 import styles from './product-item.module.scss';
 
 export const ProductItem = ({ item }: { item: CatalogItem }) => {
+  console.log('item', item);
+  const [inFav, setInFav] = React.useState(false);
+  const handleAddToFavorites = async () => {
+    try {
+      await addToFavorites(item);
+      setInFav(true);
+    } catch (error) {
+      console.error('Failed to add to favorites', error);
+    }
+  };
+  const handleRemoveFromFavorites = async () => {
+    try {
+      await removeFromFavorites({ item_id: item.item_id });
+      setInFav(false);
+    } catch (error) {
+      console.error('Failed to remove from favorites', error);
+    }
+  };
+  const handleAddToCompare = async () => {
+    try {
+      await addToCompare({ item_id: item.item_id });
+    } catch (error) {
+      console.error('Failed to add to compare', error);
+    }
+  };
   return (
     <div className={styles.root}>
       <div className={styles.image}>
@@ -61,6 +88,18 @@ export const ProductItem = ({ item }: { item: CatalogItem }) => {
         </ul>
 
         <Button>Какая-то кнопка</Button>
+        {!inFav ? (
+          <Button onClick={handleAddToFavorites} variant="outline">
+            В избранное
+          </Button>
+        ) : (
+          <Button onClick={handleRemoveFromFavorites} variant="outline">
+            Убрать из избранного
+          </Button>
+        )}
+        <Button onClick={handleAddToCompare} variant="outline">
+          Сравнить
+        </Button>
       </div>
     </div>
   );

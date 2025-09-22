@@ -4,6 +4,8 @@ import { Inter } from 'next/font/google';
 import '@/shared/styles/index.scss';
 import { HeaderWidget } from '@/widgets/header-widget';
 
+import { SessionInit } from './SessionInit';
+
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -19,6 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <SessionInit />
         <HeaderWidget />
         {children}
       </body>
